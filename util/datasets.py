@@ -9,7 +9,7 @@
 # --------------------------------------------------------
 
 import os
-import PIL
+import PIL.Image
 
 from torchvision import datasets, transforms
 
@@ -20,8 +20,8 @@ from timm.data.constants import IMAGENET_DEFAULT_MEAN, IMAGENET_DEFAULT_STD
 def build_dataset(is_train, args):
     transform = build_transform(is_train, args)
 
-    root = os.path.join(args.data_path, 'train' if is_train else 'val')
-    dataset = datasets.ImageFolder(root, transform=transform)
+    root = os.path.join(args.data_path, "train" if is_train else "val")
+    dataset = datasets.ImageFolder(root, transform=transform) # type: ignore
 
     print(dataset)
 
@@ -39,7 +39,7 @@ def build_transform(is_train, args):
             is_training=True,
             color_jitter=args.color_jitter,
             auto_augment=args.aa,
-            interpolation='bicubic',
+            interpolation="bicubic",
             re_prob=args.reprob,
             re_mode=args.remode,
             re_count=args.recount,
@@ -56,7 +56,9 @@ def build_transform(is_train, args):
         crop_pct = 1.0
     size = int(args.input_size / crop_pct)
     t.append(
-        transforms.Resize(size, interpolation=PIL.Image.BICUBIC),  # to maintain same ratio w.r.t. 224 images
+        transforms.Resize(
+            size, interpolation=PIL.Image.BICUBIC # type: ignore
+        ),  # to maintain same ratio w.r.t. 224 images
     )
     t.append(transforms.CenterCrop(args.input_size))
 
